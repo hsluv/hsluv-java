@@ -3,41 +3,30 @@ package org.huslcolors;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Straight port of https://github.com/husl-colors/husl-csharp/blob/eb28184a1e2fcdad2edb893c733dac9e7b1f2a64/HUSL/ColorConverter.cs
- * <p>
- * this file is MIT license.
- * <p>
- * This file will run without android. The tests will not.
- */
 public class HUSLColorConverter {
-    protected static double[][] m = new double[][]
+    private static double[][] m = new double[][]
             {
                     new double[]{3.240969941904521, -1.537383177570093, -0.498610760293},
                     new double[]{-0.96924363628087, 1.87596750150772, 0.041555057407175},
                     new double[]{0.055630079696993, -0.20397695888897, 1.056971514242878},
             };
 
-    protected static double[][] minv = new double[][]
+    private static double[][] minv = new double[][]
             {
                     new double[]{0.41239079926595, 0.35758433938387, 0.18048078840183},
                     new double[]{0.21263900587151, 0.71516867876775, 0.072192315360733},
                     new double[]{0.019330818715591, 0.11919477979462, 0.95053215224966},
             };
 
-    @SuppressWarnings("unused")
-    protected static double refX = 0.95045592705167;
-    protected static double refY = 1.0;
-    @SuppressWarnings("unused")
-    protected static double refZ = 1.089057750759878;
+    private static double refY = 1.0;
 
-    protected static double refU = 0.19783000664283;
-    protected static double refV = 0.46831999493879;
+    private static double refU = 0.19783000664283;
+    private static double refV = 0.46831999493879;
 
-    protected static double kappa = 903.2962962;
-    protected static double epsilon = 0.0088564516;
+    private static double kappa = 903.2962962;
+    private static double epsilon = 0.0088564516;
 
-    protected static List<double[]> getBounds(double L) {
+    private static List<double[]> getBounds(double L) {
         ArrayList<double[]> result = new ArrayList<double[]>();
 
         double sub1 = Math.pow(L + 16, 3) / 1560896;
@@ -60,17 +49,15 @@ public class HUSLColorConverter {
         return result;
     }
 
-    protected static double intersectLineLine(double[] lineA,
-                                              double[] lineB) {
+    private static double intersectLineLine(double[] lineA, double[] lineB) {
         return (lineA[1] - lineB[1]) / (lineB[0] - lineA[0]);
     }
 
-    protected static double distanceFromPole(double[] point) {
+    private static double distanceFromPole(double[] point) {
         return Math.sqrt(Math.pow(point[0], 2) + Math.pow(point[1], 2));
     }
 
-    protected static Length lengthOfRayUntilIntersect(double theta,
-                                                      double[] line) {
+    private static Length lengthOfRayUntilIntersect(double theta, double[] line) {
         double length = line[1] / (Math.sin(theta) - line[0] * Math.cos(theta));
 
         return new Length(length);
@@ -87,7 +74,7 @@ public class HUSLColorConverter {
         }
     }
 
-    protected static double maxSafeChromaForL(double L) {
+    private static double maxSafeChromaForL(double L) {
         List<double[]> bounds = getBounds(L);
         double min = Double.MAX_VALUE;
 
@@ -105,7 +92,7 @@ public class HUSLColorConverter {
         return min;
     }
 
-    protected static double maxChromaForLH(double L, double H) {
+    private static double maxChromaForLH(double L, double H) {
         double hrad = H / 360 * Math.PI * 2;
 
         List<double[]> bounds = getBounds(L);
@@ -121,8 +108,7 @@ public class HUSLColorConverter {
         return min;
     }
 
-    protected static double dotProduct(double[] a,
-                                       double[] b) {
+    private static double dotProduct(double[] a, double[] b) {
         double sum = 0;
 
         for (int i = 0; i < a.length; ++i) {
@@ -132,13 +118,13 @@ public class HUSLColorConverter {
         return sum;
     }
 
-    protected static double round(double value, int places) {
+    private static double round(double value, int places) {
         double n = Math.pow(10, places);
 
         return Math.round(value * n) / n;
     }
 
-    protected static double fromLinear(double c) {
+    private static double fromLinear(double c) {
         if (c <= 0.0031308) {
             return 12.92 * c;
         } else {
@@ -146,7 +132,7 @@ public class HUSLColorConverter {
         }
     }
 
-    protected static double toLinear(double c) {
+    private static double toLinear(double c) {
         if (c > 0.04045) {
             return Math.pow((c + 0.055) / (1 + 0.055), 2.4);
         } else {
@@ -154,7 +140,7 @@ public class HUSLColorConverter {
         }
     }
 
-    protected static int[] rgbPrepare(double[] tuple) {
+    private static int[] rgbPrepare(double[] tuple) {
 
         int[] results = new int[tuple.length];
 
@@ -197,7 +183,7 @@ public class HUSLColorConverter {
                 };
     }
 
-    protected static double yToL(double Y) {
+    private static double yToL(double Y) {
         if (Y <= epsilon) {
             return (Y / refY) * kappa;
         } else {
@@ -205,7 +191,7 @@ public class HUSLColorConverter {
         }
     }
 
-    protected static double lToY(double L) {
+    private static double lToY(double L) {
         if (L <= 8) {
             return refY * L / kappa;
         } else {
@@ -410,41 +396,20 @@ public class HUSLColorConverter {
 
     // Hex
 
-    @SuppressWarnings("unused")
     public static String huslToHex(double[] tuple) {
         return rgbToHex(huslToRgb(tuple));
     }
 
-    @SuppressWarnings("unused")
     public static String huslpToHex(double[] tuple) {
         return rgbToHex(huslpToRgb(tuple));
     }
 
-    @SuppressWarnings("unused")
     public static double[] hexToHusl(String s) {
         return rgbToHusl(hexToRgb(s));
     }
 
-    @SuppressWarnings("unused")
     public static double[] hexToHuslp(String s) {
         return rgbToHuslp(hexToRgb(s));
     }
 
-    public static int hexToInt(String s) {
-        return rgbToInt(hexToRgb(s));
-    }
-
-    public static int rgbToInt(double[] rgb) {
-        return ((int) (rgb[0] * 255) << 16)
-                + ((int) (rgb[1] * 255) << 8)
-                + ((int) (rgb[2] * 255));
-    }
-
-    public static double[] intToRgb(int rgb24bit) {
-        return new double[]{
-                ((rgb24bit & 0xff0000) >> 16) / 255.0,
-                ((rgb24bit & 0x00ff00) >> 8) / 255.0,
-                (rgb24bit & 0x0000ff) / 255.0
-        };
-    }
 }
