@@ -1,20 +1,19 @@
 package org.huslcolors;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
-import java.util.Scanner;
+
+import javax.json.*;
 
 
 public class ColorConverterTest extends TestCase {
 
-    private static final double MAXDIFF = 0.000000001;
-    private static final double MAXRELDIFF = 0.00000001;
+    private static final double MAXDIFF = 0.0000000001;
+    private static final double MAXRELDIFF = 0.000000001;
 
     /**
      * modified from
@@ -35,23 +34,25 @@ public class ColorConverterTest extends TestCase {
         return diff <= largest * MAXRELDIFF;
     }
 
-    private void assertTuplesClose(String label, double[] a, double[] b) {
+    private void assertTuplesClose(String label, double[] expected, double[] actual) {
         boolean mismatch = false;
-        double[] deltas = new double[a.length];
+        double[] deltas = new double[expected.length];
 
-        for (int i = 0; i < a.length; ++i) {
-            deltas[i] = a[i] - b[i];
-            if (!assertAlmostEqualRelativeAndAbs(a[i], b[i])) {
+        for (int i = 0; i < expected.length; ++i) {
+            deltas[i] = Math.abs(expected[i] - actual[i]);
+            if (!assertAlmostEqualRelativeAndAbs(expected[i], actual[i])) {
                 mismatch = true;
             }
         }
 
         if (mismatch) {
-            System.out.println("mismatch: " + label);
-            System.out.printf("a: %.32f,%.32f,%.32f\n", a[0], a[1], a[2]);
-            System.out.printf("b: %.32f,%.32f,%.32f\n", b[0], b[1], b[2]);
-            System.out.printf("deltas: %.32f,%.32f,%.32f\n", deltas[0], deltas[1], deltas[2]);
+            System.out.printf("MISMATCH %s\n", label);
+            System.out.printf(" expected: %.10f,%.10f,%.10f\n", expected[0], expected[1], expected[2]);
+            System.out.printf("   actual: %.10f,%.10f,%.10f\n", actual[0], actual[1], actual[2]);
+            System.out.printf("   deltas: %.10f,%.10f,%.10f\n", deltas[0], deltas[1], deltas[2]);
         }
+
+        assertFalse(mismatch);
     }
 
 
@@ -59,58 +60,73 @@ public class ColorConverterTest extends TestCase {
         return new TestSuite(ColorConverterTest.class);
     }
 
+    private double[] tupleFromJsonArray(JsonArray arr) {
+        return new double[]{
+                arr.getJsonNumber(0).doubleValue(),
+                arr.getJsonNumber(1).doubleValue(),
+                arr.getJsonNumber(2).doubleValue()
+        };
+    }
+
     public void testHusl() throws IOException {
         System.out.println("Running test");
         InputStream snapshotStream = ColorConverterTest.class.getResourceAsStream("/snapshot-rev4.json");
-        String snapshotString = new Scanner(snapshotStream, "UTF-8").useDelimiter("\\A").next();
 
-        Map<String, HUSLTestCase> tests = LoganSquare.parseMap(snapshotString, HUSLTestCase.class);
+        JsonReader reader = Json.createReader(snapshotStream);
+        JsonObject tests = reader.readObject();
 
-        for (Map.Entry<String, HUSLTestCase> pair : tests.entrySet()) {
+        for (String hex : tests.keySet()) {
+            JsonObject expected = tests.getJsonObject(hex);
+            double[] rgb = tupleFromJsonArray(expected.getJsonArray("rgb"));
+            double[] xyz = tupleFromJsonArray(expected.getJsonArray("xyz"));
+            double[] luv = tupleFromJsonArray(expected.getJsonArray("luv"));
+            double[] lch = tupleFromJsonArray(expected.getJsonArray("lch"));
+            double[] husl = tupleFromJsonArray(expected.getJsonArray("husl"));
+            double[] huslp = tupleFromJsonArray(expected.getJsonArray("huslp"));
 
-            HUSLTestCase expected = pair.getValue();
-            String hex = pair.getKey();
-
-            System.out.println(hex);
+            System.out.println("testing " + hex);
 
             // forward functions
+
             double[] rgbFromHex = HUSLColorConverter.hexToRgb(hex);
-            double[] xyzFromRgb = HUSLColorConverter.rgbToXyz(expected.rgb);
-            double[] luvFromXyz = HUSLColorConverter.xyzToLuv(expected.xyz);
-            double[] lchFromLuv = HUSLColorConverter.luvToLch(expected.luv);
-            double[] huslFromLch = HUSLColorConverter.lchToHusl(expected.lch);
-            double[] huslpFromLch = HUSLColorConverter.lchToHuslp(expected.lch);
+            double[] xyzFromRgb = HUSLColorConverter.rgbToXyz(rgbFromHex);
+            double[] luvFromXyz = HUSLColorConverter.xyzToLuv(xyzFromRgb);
+            double[] lchFromLuv = HUSLColorConverter.luvToLch(luvFromXyz);
+            double[] huslFromLch = HUSLColorConverter.lchToHusl(lchFromLuv);
+            double[] huslpFromLch = HUSLColorConverter.lchToHuslp(lchFromLuv);
             double[] huslFromHex = HUSLColorConverter.hexToHusl(hex);
             double[] huslpFromHex = HUSLColorConverter.hexToHuslp(hex);
+
+            assertTuplesClose("hexToRgb", rgb, rgbFromHex);
+            assertTuplesClose("rgbToXyz", xyz, xyzFromRgb);
+            assertTuplesClose("xyzToLuv", luv, luvFromXyz);
+            assertTuplesClose("luvToLch", lch, lchFromLuv);
+            assertTuplesClose("lchToHusl", husl, huslFromLch);
+            assertTuplesClose("lchToHuslp", huslp, huslpFromLch);
+            assertTuplesClose("hexToHusl", husl, huslFromHex);
+            assertTuplesClose("hexToHuslp", huslp, huslpFromHex);
+
             // backward functions
-            double[] lchFromHusl = HUSLColorConverter.huslToLch(expected.husl);
-            double[] lchFromHuslp = HUSLColorConverter.huslpToLch(expected.huslp);
-            double[] luvFromLch = HUSLColorConverter.lchToLuv(expected.lch);
-            double[] xyzFromLuv = HUSLColorConverter.luvToXyz(expected.luv);
-            double[] rgbFromXyz = HUSLColorConverter.xyzToRgb(expected.xyz);
-            String hexFromRgb = HUSLColorConverter.rgbToHex(expected.rgb);
-            String hexFromHusl = HUSLColorConverter.huslToHex(expected.husl);
-            String hexFromHuslp = HUSLColorConverter.huslpToHex(expected.huslp);
 
-            assertTuplesClose("hexToRgb", expected.rgb, rgbFromHex);
-            assertTuplesClose("rgbToXyz", expected.xyz, xyzFromRgb);
-            assertTuplesClose("xyzToLuv", expected.luv, luvFromXyz);
-            assertTuplesClose("luvToLch", expected.lch, lchFromLuv);
-            assertTuplesClose("lchToHusl", expected.husl, huslFromLch);
-            assertTuplesClose("lchToHuslp", expected.huslp, huslpFromLch);
-            assertTuplesClose("hexToHusl", expected.huslp, huslFromHex);
-            assertTuplesClose("hexToHuslp", expected.huslp, huslpFromHex);
+            double[] lchFromHusl = HUSLColorConverter.huslToLch(husl);
+            double[] lchFromHuslp = HUSLColorConverter.huslpToLch(huslp);
+            double[] luvFromLch = HUSLColorConverter.lchToLuv(lch);
+            double[] xyzFromLuv = HUSLColorConverter.luvToXyz(luv);
+            double[] rgbFromXyz = HUSLColorConverter.xyzToRgb(xyz);
+            String hexFromRgb = HUSLColorConverter.rgbToHex(rgb);
+            String hexFromHusl = HUSLColorConverter.huslToHex(husl);
+            String hexFromHuslp = HUSLColorConverter.huslpToHex(huslp);
 
-            assertTuplesClose("huslToLch", expected.lch, lchFromHusl);
-            assertTuplesClose("huslpToLch", expected.lch, lchFromHuslp);
-            assertTuplesClose("lchToLuv", expected.luv, luvFromLch);
-            assertTuplesClose("luvToXyz", expected.xyz, xyzFromLuv);
-            assertTuplesClose("xyzToRgb", expected.rgb, rgbFromXyz);
+            assertTuplesClose("huslToLch", lch, lchFromHusl);
+            assertTuplesClose("huslpToLch", lch, lchFromHuslp);
+            assertTuplesClose("lchToLuv", luv, luvFromLch);
+            assertTuplesClose("luvToXyz", xyz, xyzFromLuv);
+            assertTuplesClose("xyzToRgb", rgb, rgbFromXyz);
             assertEquals(hex, hexFromRgb);
             assertEquals(hex, hexFromHusl);
             assertEquals(hex, hexFromHuslp);
 
-            assertEquals(hex, String.format("#%06x", HUSLColorConverter.rgbToInt(expected.rgb)));
+            assertEquals(hex, String.format("#%06x", HUSLColorConverter.rgbToInt(rgb)));
 
         }
     }

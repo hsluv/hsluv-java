@@ -138,7 +138,7 @@ public class HUSLColorConverter {
         return Math.round(value * n) / n;
     }
 
-    protected static double dromLinear(double c) {
+    protected static double fromLinear(double c) {
         if (c <= 0.0031308) {
             return 12.92 * c;
         } else {
@@ -156,20 +156,17 @@ public class HUSLColorConverter {
 
     protected static int[] rgbPrepare(double[] tuple) {
 
-        for (int i = 0; i < tuple.length; ++i) {
-            tuple[i] = round(tuple[i], 3);
-        }
-
-        for (double ch : tuple) {
-            if (ch < -0.0001 || ch > 1.0001) {
-                throw new IllegalArgumentException("Illegal rgb value: " + ch);
-            }
-        }
-
         int[] results = new int[tuple.length];
 
         for (int i = 0; i < tuple.length; ++i) {
-            results[i] = (int) Math.round(tuple[i] * 255);
+            double chan = tuple[i];
+            double rounded = round(chan, 3);
+
+            if (rounded < -0.0001 || rounded > 1.0001) {
+                throw new IllegalArgumentException("Illegal rgb value: " + rounded);
+            }
+
+            results[i] = (int) Math.round(rounded * 255);
         }
 
         return results;
@@ -178,9 +175,9 @@ public class HUSLColorConverter {
     public static double[] xyzToRgb(double[] tuple) {
         return new double[]
                 {
-                        dromLinear(dotProduct(m[0], tuple)),
-                        dromLinear(dotProduct(m[1], tuple)),
-                        dromLinear(dotProduct(m[2], tuple)),
+                        fromLinear(dotProduct(m[0], tuple)),
+                        fromLinear(dotProduct(m[1], tuple)),
+                        fromLinear(dotProduct(m[2], tuple)),
                 };
     }
 
@@ -261,13 +258,19 @@ public class HUSLColorConverter {
         double V = tuple[2];
 
         double C = Math.sqrt(U * U + V * V);
-        double Hrad = Math.atan2(V, U);
+        double H;
 
-        // pi to more digits than they provide it in the stdlib
-        double H = (Hrad * 180.0) / 3.1415926535897932;
+        if (C < 0.00000001) {
+            H = 0;
+        } else {
+            double Hrad = Math.atan2(V, U);
 
-        if (H < 0) {
-            H = 360 + H;
+            // pi to more digits than they provide it in the stdlib
+            H = (Hrad * 180.0) / 3.1415926535897932;
+
+            if (H < 0) {
+                H = 360 + H;
+            }
         }
 
         return new double[]{L, C, H};
