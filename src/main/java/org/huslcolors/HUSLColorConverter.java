@@ -1,4 +1,4 @@
-package fill me in;
+package org.huslcolors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.List;
  * Straight port of https://github.com/husl-colors/husl-csharp/blob/eb28184a1e2fcdad2edb893c733dac9e7b1f2a64/HUSL/ColorConverter.cs
  * <p>
  * this file is MIT license.
- *
+ * <p>
  * This file will run without android. The tests will not.
  */
 public class HUSLColorConverter {
@@ -38,7 +38,7 @@ public class HUSLColorConverter {
     protected static double epsilon = 0.0088564516;
 
     protected static List<double[]> getBounds(double L) {
-        ArrayList<double[]> result = new ArrayList<>();
+        ArrayList<double[]> result = new ArrayList<double[]>();
 
         double sub1 = Math.pow(L + 16, 3) / 1560896;
         double sub2 = sub1 > epsilon ? sub1 : L / kappa;
@@ -432,13 +432,13 @@ public class HUSLColorConverter {
     }
 
     public static int rgbToInt(double[] rgb) {
-        return ((int)(rgb[0] * 255) << 16)
-                + ((int)(rgb[1] * 255) << 8)
-                + ((int)(rgb[2] * 255));
+        return ((int) (rgb[0] * 255) << 16)
+                + ((int) (rgb[1] * 255) << 8)
+                + ((int) (rgb[2] * 255));
     }
 
     public static double[] intToRgb(int rgb24bit) {
-        return new double[] {
+        return new double[]{
                 ((rgb24bit & 0xff0000) >> 16) / 255.0,
                 ((rgb24bit & 0x00ff00) >> 8) / 255.0,
                 (rgb24bit & 0x0000ff) / 255.0

@@ -1,4 +1,4 @@
-package fill me in;
+package org.huslcolors;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
