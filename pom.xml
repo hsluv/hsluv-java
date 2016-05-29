@@ -4,7 +4,7 @@
     <groupId>org.huslcolors</groupId>
     <artifactId>husl</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>HUSL</name>
     <description>Human-friendly HSL</description>
@@ -22,7 +22,7 @@
         <url>https://github.com/husl-colors/husl-java</url>
         <connection>scm:git:git://github.com/husl-colors/husl-java.git</connection>
         <developerConnection>scm:git:git@github.com:husl-colors/husl-java.git</developerConnection>
-      <tag>husl-1.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <developers>
