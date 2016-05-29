@@ -126,8 +126,6 @@ public class ColorConverterTest extends TestCase {
             assertEquals(hex, hexFromHusl);
             assertEquals(hex, hexFromHuslp);
 
-            assertEquals(hex, String.format("#%06x", HUSLColorConverter.rgbToInt(rgb)));
-
         }
     }
 }
