@@ -1,4 +1,4 @@
-package org.huslcolors;
+package org.hsluv;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -68,7 +68,7 @@ public class ColorConverterTest extends TestCase {
         };
     }
 
-    public void testHusl() throws IOException {
+    public void testHsluv() throws IOException {
         System.out.println("Running test");
         InputStream snapshotStream = ColorConverterTest.class.getResourceAsStream("/snapshot-rev4.json");
 
@@ -81,8 +81,8 @@ public class ColorConverterTest extends TestCase {
             double[] xyz = tupleFromJsonArray(expected.getJsonArray("xyz"));
             double[] luv = tupleFromJsonArray(expected.getJsonArray("luv"));
             double[] lch = tupleFromJsonArray(expected.getJsonArray("lch"));
-            double[] husl = tupleFromJsonArray(expected.getJsonArray("husl"));
-            double[] huslp = tupleFromJsonArray(expected.getJsonArray("huslp"));
+            double[] hsluv = tupleFromJsonArray(expected.getJsonArray("hsluv"));
+            double[] hpluv = tupleFromJsonArray(expected.getJsonArray("hpluv"));
 
             System.out.println("testing " + hex);
 
@@ -92,39 +92,39 @@ public class ColorConverterTest extends TestCase {
             double[] xyzFromRgb = HUSLColorConverter.rgbToXyz(rgbFromHex);
             double[] luvFromXyz = HUSLColorConverter.xyzToLuv(xyzFromRgb);
             double[] lchFromLuv = HUSLColorConverter.luvToLch(luvFromXyz);
-            double[] huslFromLch = HUSLColorConverter.lchToHusl(lchFromLuv);
-            double[] huslpFromLch = HUSLColorConverter.lchToHuslp(lchFromLuv);
-            double[] huslFromHex = HUSLColorConverter.hexToHusl(hex);
-            double[] huslpFromHex = HUSLColorConverter.hexToHuslp(hex);
+            double[] hsluvFromLch = HUSLColorConverter.lchToHsluv(lchFromLuv);
+            double[] hpluvFromLch = HUSLColorConverter.lchToHpluv(lchFromLuv);
+            double[] hsluvFromHex = HUSLColorConverter.hexToHsluv(hex);
+            double[] hpluvFromHex = HUSLColorConverter.hexToHpluv(hex);
 
             assertTuplesClose("hexToRgb", rgb, rgbFromHex);
             assertTuplesClose("rgbToXyz", xyz, xyzFromRgb);
             assertTuplesClose("xyzToLuv", luv, luvFromXyz);
             assertTuplesClose("luvToLch", lch, lchFromLuv);
-            assertTuplesClose("lchToHusl", husl, huslFromLch);
-            assertTuplesClose("lchToHuslp", huslp, huslpFromLch);
-            assertTuplesClose("hexToHusl", husl, huslFromHex);
-            assertTuplesClose("hexToHuslp", huslp, huslpFromHex);
+            assertTuplesClose("lchToHsluv", hsluv, hsluvFromLch);
+            assertTuplesClose("lchToHpluv", hpluv, hpluvFromLch);
+            assertTuplesClose("hexToHsluv", hsluv, hsluvFromHex);
+            assertTuplesClose("hexToHpluv", hpluv, hpluvFromHex);
 
             // backward functions
 
-            double[] lchFromHusl = HUSLColorConverter.huslToLch(husl);
-            double[] lchFromHuslp = HUSLColorConverter.huslpToLch(huslp);
+            double[] lchFromHsluv = HUSLColorConverter.hsluvToLch(hsluv);
+            double[] lchFromHpluv = HUSLColorConverter.hpluvToLch(hpluv);
             double[] luvFromLch = HUSLColorConverter.lchToLuv(lch);
             double[] xyzFromLuv = HUSLColorConverter.luvToXyz(luv);
             double[] rgbFromXyz = HUSLColorConverter.xyzToRgb(xyz);
             String hexFromRgb = HUSLColorConverter.rgbToHex(rgb);
-            String hexFromHusl = HUSLColorConverter.huslToHex(husl);
-            String hexFromHuslp = HUSLColorConverter.huslpToHex(huslp);
+            String hexFromHsluv = HUSLColorConverter.hsluvToHex(hsluv);
+            String hexFromHpluv = HUSLColorConverter.hpluvToHex(hpluv);
 
-            assertTuplesClose("huslToLch", lch, lchFromHusl);
-            assertTuplesClose("huslpToLch", lch, lchFromHuslp);
+            assertTuplesClose("hsluvToLch", lch, lchFromHsluv);
+            assertTuplesClose("hpluvToLch", lch, lchFromHpluv);
             assertTuplesClose("lchToLuv", luv, luvFromLch);
             assertTuplesClose("luvToXyz", xyz, xyzFromLuv);
             assertTuplesClose("xyzToRgb", rgb, rgbFromXyz);
             assertEquals(hex, hexFromRgb);
-            assertEquals(hex, hexFromHusl);
-            assertEquals(hex, hexFromHuslp);
+            assertEquals(hex, hexFromHsluv);
+            assertEquals(hex, hexFromHpluv);
 
         }
     }

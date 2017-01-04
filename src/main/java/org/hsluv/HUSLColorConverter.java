@@ -1,4 +1,4 @@
-package org.huslcolors;
+package org.hsluv;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,7 +274,7 @@ public class HUSLColorConverter {
         return new double[]{L, U, V};
     }
 
-    public static double[] huslToLch(double[] tuple) {
+    public static double[] hsluvToLch(double[] tuple) {
         double H = tuple[0];
         double S = tuple[1];
         double L = tuple[2];
@@ -293,7 +293,7 @@ public class HUSLColorConverter {
         return new double[]{L, C, H};
     }
 
-    public static double[] lchToHusl(double[] tuple) {
+    public static double[] lchToHsluv(double[] tuple) {
         double L = tuple[0];
         double C = tuple[1];
         double H = tuple[2];
@@ -312,7 +312,7 @@ public class HUSLColorConverter {
         return new double[]{H, S, L};
     }
 
-    public static double[] huslpToLch(double[] tuple) {
+    public static double[] hpluvToLch(double[] tuple) {
         double H = tuple[0];
         double S = tuple[1];
         double L = tuple[2];
@@ -331,7 +331,7 @@ public class HUSLColorConverter {
         return new double[]{L, C, H};
     }
 
-    public static double[] lchToHuslp(double[] tuple) {
+    public static double[] lchToHpluv(double[] tuple) {
         double L = tuple[0];
         double C = tuple[1];
         double H = tuple[2];
@@ -378,38 +378,38 @@ public class HUSLColorConverter {
 
     // RGB <--> HUSL(p)
 
-    public static double[] huslToRgb(double[] tuple) {
-        return lchToRgb(huslToLch(tuple));
+    public static double[] hsluvToRgb(double[] tuple) {
+        return lchToRgb(hsluvToLch(tuple));
     }
 
-    public static double[] rgbToHusl(double[] tuple) {
-        return lchToHusl(rgbToLch(tuple));
+    public static double[] rgbToHsluv(double[] tuple) {
+        return lchToHsluv(rgbToLch(tuple));
     }
 
-    public static double[] huslpToRgb(double[] tuple) {
-        return lchToRgb(huslpToLch(tuple));
+    public static double[] hpluvToRgb(double[] tuple) {
+        return lchToRgb(hpluvToLch(tuple));
     }
 
-    public static double[] rgbToHuslp(double[] tuple) {
-        return lchToHuslp(rgbToLch(tuple));
+    public static double[] rgbToHpluv(double[] tuple) {
+        return lchToHpluv(rgbToLch(tuple));
     }
 
     // Hex
 
-    public static String huslToHex(double[] tuple) {
-        return rgbToHex(huslToRgb(tuple));
+    public static String hsluvToHex(double[] tuple) {
+        return rgbToHex(hsluvToRgb(tuple));
     }
 
-    public static String huslpToHex(double[] tuple) {
-        return rgbToHex(huslpToRgb(tuple));
+    public static String hpluvToHex(double[] tuple) {
+        return rgbToHex(hpluvToRgb(tuple));
     }
 
-    public static double[] hexToHusl(String s) {
-        return rgbToHusl(hexToRgb(s));
+    public static double[] hexToHsluv(String s) {
+        return rgbToHsluv(hexToRgb(s));
     }
 
-    public static double[] hexToHuslp(String s) {
-        return rgbToHuslp(hexToRgb(s));
+    public static double[] hexToHpluv(String s) {
+        return rgbToHpluv(hexToRgb(s));
     }
 
 }

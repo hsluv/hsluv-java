@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.husl-colors</groupId>
-    <artifactId>husl</artifactId>
+    <groupId>org.hsluv</groupId>
+    <artifactId>hsluv</artifactId>
     <packaging>jar</packaging>
     <version>1.2</version>
 
-    <name>HUSL</name>
+    <name>hsluv</name>
     <description>Human-friendly HSL</description>
-    <url>http://www.husl-colors.org</url>
+    <url>http://www.hsluv.org</url>
 
     <licenses>
         <license>
@@ -19,9 +19,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/husl-colors/husl-java</url>
-        <connection>scm:git:git://github.com/husl-colors/husl-java.git</connection>
-        <developerConnection>scm:git:git@github.com:husl-colors/husl-java.git</developerConnection>
+        <url>https://github.com/hsluv/hsluv-java</url>
+        <connection>scm:git:git://github.com/hsluv/hsluv-java.git</connection>
+        <developerConnection>scm:git:git@github.com:hsluv/hsluv-java.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
