@@ -11,7 +11,7 @@ If you are using Maven, add the following to your `pom.xml` file:
     <dependency>
         <groupId>org.hsluv</groupId>
         <artifactId>hsluv</artifactId>
-        <version>1.2</version>
+        <version>0.2</version>
     </dependency>
     
 # Documentation
