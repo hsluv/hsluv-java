@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hsluv/hsluv-java.svg?branch=master)](https://travis-ci.org/hsluv/hsluv-java)
+[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
 [![Package Version](https://img.shields.io/maven-central/v/org.hsluv/hsluv.svg)](http://repo1.maven.org/maven2/org/hsluv/hsluv/)
 [![Javadocs](http://www.javadoc.io/badge/org.hsluv/hsluv.svg)](http://www.javadoc.io/doc/org.hsluv/hsluv)
 
