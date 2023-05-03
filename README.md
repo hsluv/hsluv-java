@@ -21,3 +21,42 @@ Javadocs: http://www.javadoc.io/doc/org.hsluv/hsluv
 # Testing
 
     mvn test
+
+# Deployment
+
+Docs: 
+- https://central.sonatype.org/publish/publish-maven/
+- https://central.sonatype.org/publish/requirements/gpg/
+
+Set `~/m2/settings.xml`:
+
+```xml
+<settings>
+    <servers>
+        <server>
+            <id>ossrh</id>
+            <username>hsluv</username>
+            <password>REDACTEDREDACTEDREDACTED</password>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <gpg.passphrase>REDACTEDREDACTEDREDACTED</gpg.passphrase>
+            </properties>
+        </profile>
+    </profiles>
+</settings>
+```
+
+Then run:
+
+```bash
+mvn versions:set -DnewVersion=0.3 # bump version
+mvn clean deploy -P release
+```
+

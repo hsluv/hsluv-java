@@ -1,13 +1,12 @@
 package org.hsluv;
 
+import jakarta.json.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.json.*;
 
 
 public class ColorConverterTest extends TestCase {
