@@ -1,4 +1,5 @@
 *.iml
+/.vscode
 target/
 settings.xml
 pom.xml.tag

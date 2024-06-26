@@ -1,130 +1,94 @@
 package org.hsluv;
 
 import jakarta.json.*;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Test;
 
-public class ColorConverterTest extends TestCase {
-
-    private static final double MAXDIFF = 0.0000000001;
-    private static final double MAXRELDIFF = 0.000000001;
-
-    /**
-     * modified from
-     * https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
-     */
-    private boolean assertAlmostEqualRelativeAndAbs(double a, double b) {
-        // Check if the numbers are really close -- needed
-        // when comparing numbers near zero.
-        double diff = Math.abs(a - b);
-        if (diff <= MAXDIFF) {
-            return true;
+public class ColorConverterTest {
+    static void assertFloatClose(double expected, double actual) {
+        if (Math.abs(expected - actual) > 1e-10) {
+            System.out.println(expected);
+            System.out.println(actual);
+            throw new RuntimeException("Not equals");
         }
-
-        a = Math.abs(a);
-        b = Math.abs(b);
-        double largest = (b > a) ? b : a;
-
-        return diff <= largest * MAXRELDIFF;
     }
 
-    private void assertTuplesClose(String label, double[] expected, double[] actual) {
-        boolean mismatch = false;
-        double[] deltas = new double[expected.length];
-
-        for (int i = 0; i < expected.length; ++i) {
-            deltas[i] = Math.abs(expected[i] - actual[i]);
-            if (!assertAlmostEqualRelativeAndAbs(expected[i], actual[i])) {
-                mismatch = true;
-            }
-        }
-
-        if (mismatch) {
-            System.out.printf("MISMATCH %s\n", label);
-            System.out.printf(" expected: %.10f,%.10f,%.10f\n", expected[0], expected[1], expected[2]);
-            System.out.printf("   actual: %.10f,%.10f,%.10f\n", actual[0], actual[1], actual[2]);
-            System.out.printf("   deltas: %.10f,%.10f,%.10f\n", deltas[0], deltas[1], deltas[2]);
-        }
-
-        assertFalse(mismatch);
+    static void assertClose(HsluvColorConverter expected, HsluvColorConverter actual) {
+        assertEquals(expected.hex, actual.hex);
+        assertFloatClose(expected.rgb_r, actual.rgb_r);
+        assertFloatClose(expected.rgb_g, actual.rgb_g);
+        assertFloatClose(expected.rgb_b, actual.rgb_b);
+        assertFloatClose(expected.xyz_x, actual.xyz_x);
+        assertFloatClose(expected.xyz_y, actual.xyz_y);
+        assertFloatClose(expected.xyz_z, actual.xyz_z);
+        assertFloatClose(expected.luv_l, actual.luv_l);
+        assertFloatClose(expected.luv_u, actual.luv_u);
+        assertFloatClose(expected.luv_v, actual.luv_v);
+        assertFloatClose(expected.lch_l, actual.lch_l);
+        assertFloatClose(expected.lch_c, actual.lch_c);
+        assertFloatClose(expected.lch_h, actual.lch_h);
+        assertFloatClose(expected.hsluv_h, actual.hsluv_h);
+        assertFloatClose(expected.hsluv_s, actual.hsluv_s);
+        assertFloatClose(expected.hsluv_l, actual.hsluv_l);
+        assertFloatClose(expected.hpluv_h, actual.hpluv_h);
+        assertFloatClose(expected.hpluv_p, actual.hpluv_p);
+        assertFloatClose(expected.hpluv_l, actual.hpluv_l);
     }
 
-
-    public static Test suite() {
-        return new TestSuite(ColorConverterTest.class);
+    static double getSample(JsonObject s, String cs, int index) {
+        return s.getJsonArray(cs).getJsonNumber(index).doubleValue();
     }
 
-    private double[] tupleFromJsonArray(JsonArray arr) {
-        return new double[]{
-                arr.getJsonNumber(0).doubleValue(),
-                arr.getJsonNumber(1).doubleValue(),
-                arr.getJsonNumber(2).doubleValue()
-        };
-    }
-
+    @Test
     public void testHsluv() throws IOException {
         System.out.println("Running test");
         InputStream snapshotStream = ColorConverterTest.class.getResourceAsStream("/snapshot-rev4.json");
 
         JsonReader reader = Json.createReader(snapshotStream);
         JsonObject tests = reader.readObject();
+        HsluvColorConverter conv = new HsluvColorConverter();
 
         for (String hex : tests.keySet()) {
-            JsonObject expected = tests.getJsonObject(hex);
-            double[] rgb = tupleFromJsonArray(expected.getJsonArray("rgb"));
-            double[] xyz = tupleFromJsonArray(expected.getJsonArray("xyz"));
-            double[] luv = tupleFromJsonArray(expected.getJsonArray("luv"));
-            double[] lch = tupleFromJsonArray(expected.getJsonArray("lch"));
-            double[] hsluv = tupleFromJsonArray(expected.getJsonArray("hsluv"));
-            double[] hpluv = tupleFromJsonArray(expected.getJsonArray("hpluv"));
-
-            System.out.println("testing " + hex);
-
-            // forward functions
-
-            double[] rgbFromHex = HUSLColorConverter.hexToRgb(hex);
-            double[] xyzFromRgb = HUSLColorConverter.rgbToXyz(rgbFromHex);
-            double[] luvFromXyz = HUSLColorConverter.xyzToLuv(xyzFromRgb);
-            double[] lchFromLuv = HUSLColorConverter.luvToLch(luvFromXyz);
-            double[] hsluvFromLch = HUSLColorConverter.lchToHsluv(lchFromLuv);
-            double[] hpluvFromLch = HUSLColorConverter.lchToHpluv(lchFromLuv);
-            double[] hsluvFromHex = HUSLColorConverter.hexToHsluv(hex);
-            double[] hpluvFromHex = HUSLColorConverter.hexToHpluv(hex);
-
-            assertTuplesClose("hexToRgb", rgb, rgbFromHex);
-            assertTuplesClose("rgbToXyz", xyz, xyzFromRgb);
-            assertTuplesClose("xyzToLuv", luv, luvFromXyz);
-            assertTuplesClose("luvToLch", lch, lchFromLuv);
-            assertTuplesClose("lchToHsluv", hsluv, hsluvFromLch);
-            assertTuplesClose("lchToHpluv", hpluv, hpluvFromLch);
-            assertTuplesClose("hexToHsluv", hsluv, hsluvFromHex);
-            assertTuplesClose("hexToHpluv", hpluv, hpluvFromHex);
-
-            // backward functions
-
-            double[] lchFromHsluv = HUSLColorConverter.hsluvToLch(hsluv);
-            double[] lchFromHpluv = HUSLColorConverter.hpluvToLch(hpluv);
-            double[] luvFromLch = HUSLColorConverter.lchToLuv(lch);
-            double[] xyzFromLuv = HUSLColorConverter.luvToXyz(luv);
-            double[] rgbFromXyz = HUSLColorConverter.xyzToRgb(xyz);
-            String hexFromRgb = HUSLColorConverter.rgbToHex(rgb);
-            String hexFromHsluv = HUSLColorConverter.hsluvToHex(hsluv);
-            String hexFromHpluv = HUSLColorConverter.hpluvToHex(hpluv);
-
-            assertTuplesClose("hsluvToLch", lch, lchFromHsluv);
-            assertTuplesClose("hpluvToLch", lch, lchFromHpluv);
-            assertTuplesClose("lchToLuv", luv, luvFromLch);
-            assertTuplesClose("luvToXyz", xyz, xyzFromLuv);
-            assertTuplesClose("xyzToRgb", rgb, rgbFromXyz);
-            assertEquals(hex, hexFromRgb);
-            assertEquals(hex, hexFromHsluv);
-            assertEquals(hex, hexFromHpluv);
-
+            JsonObject s = tests.getJsonObject(hex);
+            HsluvColorConverter sample = new HsluvColorConverter();
+            sample.hex = hex;
+            sample.rgb_r = getSample(s, "rgb", 0);
+            sample.rgb_g = getSample(s, "rgb", 1);
+            sample.rgb_b = getSample(s, "rgb", 2);
+            sample.xyz_x = getSample(s, "xyz", 0);
+            sample.xyz_y = getSample(s, "xyz", 1);
+            sample.xyz_z = getSample(s, "xyz", 2);
+            sample.luv_l = getSample(s, "luv", 0);
+            sample.luv_u = getSample(s, "luv", 1);
+            sample.luv_v = getSample(s, "luv", 2);
+            sample.lch_l = getSample(s, "lch", 0);
+            sample.lch_c = getSample(s, "lch", 1);
+            sample.lch_h = getSample(s, "lch", 2);
+            sample.hsluv_h = getSample(s, "hsluv", 0);
+            sample.hsluv_s = getSample(s, "hsluv", 1);
+            sample.hsluv_l = getSample(s, "hsluv", 2);
+            sample.hpluv_h = getSample(s, "hpluv", 0);
+            sample.hpluv_p = getSample(s, "hpluv", 1);
+            sample.hpluv_l = getSample(s, "hpluv", 2);
+            conv.hex = hex;
+            conv.hexToHsluv();
+            assertClose(conv, sample);
+            conv.hexToHpluv();
+            assertClose(conv, sample);
+            conv.hsluv_h = sample.hsluv_h;
+            conv.hsluv_s = sample.hsluv_s;
+            conv.hsluv_l = sample.hsluv_l;
+            conv.hsluvToHex();
+            assertClose(conv, sample);
+            conv.hpluv_h = sample.hpluv_h;
+            conv.hpluv_p = sample.hpluv_p;
+            conv.hpluv_l = sample.hpluv_l;
+            conv.hpluvToHex();
+            assertClose(conv, sample);
         }
     }
 }
