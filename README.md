@@ -57,6 +57,12 @@ conv.hsluv_s = 75;
 conv.hsluv_l = 65;
 conv.hsluvToHex();
 System.out.println(conv.hex); // Will print "#ec7d82"
+float r = Math.max(0, (float) conv.rgb_r);
+float g = Math.max(0, (float) conv.rgb_g);
+float b = Math.max(0, (float) conv.rgb_b);
+var color = new java.awt.Color(r, g, b);
+// For Android
+var color = android.graphics.Color.rgb(r, g, b);
 ```
 
 # Testing
