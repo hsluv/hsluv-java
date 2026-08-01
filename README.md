@@ -73,31 +73,25 @@ var color = android.graphics.Color.rgb(r, g, b);
 
 Docs:
 
-- https://central.sonatype.org/publish/publish-maven/
+- https://central.sonatype.org/publish/publish-portal-maven/
 - https://central.sonatype.org/publish/requirements/gpg/
+- https://central.sonatype.org/publish/generate-portal-token/
 
-Set `~/m2/settings.xml`:
+Generate a Portal token at https://central.sonatype.com, then set `~/.m2/settings.xml`:
 
 ```xml
 <settings>
     <servers>
         <server>
-            <id>ossrh</id>
-            <username>hsluv</username>
-            <password>REDACTEDREDACTEDREDACTED</password>
+            <id>central</id>
+            <username><!-- your token username --></username>
+            <password><!-- your token password --></password>
+        </server>
+        <server>
+            <id>EBFD22439E5C59D664D0CFC750617B51F61187C2</id>
+            <passphrase><!-- your GPG key passphrase --></passphrase>
         </server>
     </servers>
-    <profiles>
-        <profile>
-            <id>ossrh</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <gpg.passphrase>REDACTEDREDACTEDREDACTED</gpg.passphrase>
-            </properties>
-        </profile>
-    </profiles>
 </settings>
 ```
 
@@ -105,5 +99,5 @@ Then run:
 
 ```bash
 mvn versions:set -DnewVersion=0.3 # bump version
-mvn clean deploy -P release
+mvn clean deploy
 ```
