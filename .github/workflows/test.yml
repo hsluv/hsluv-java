@@ -1,8 +1,10 @@
 name: Compile and test
 
 on:
-  - pull_request
-  - push
+  push:
+    branches:
+      - '**'
+  pull_request:
 
 jobs:
   build:
