@@ -1,6 +1,6 @@
-[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
-[![Package Version](https://img.shields.io/maven-central/v/org.hsluv/hsluv.svg)](http://repo1.maven.org/maven2/org/hsluv/hsluv/)
-[![Javadocs](http://www.javadoc.io/badge/org.hsluv/hsluv.svg)](http://www.javadoc.io/doc/org.hsluv/hsluv)
+[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.hsluv/hsluv)](https://central.sonatype.com/artifact/org.hsluv/hsluv)
+[![Javadoc](https://javadoc.io/badge2/org.hsluv/hsluv/javadoc.svg)](https://javadoc.io/doc/org.hsluv/hsluv)
 
 About: http://www.hsluv.org
 
@@ -71,33 +71,21 @@ var color = android.graphics.Color.rgb(r, g, b);
 
 # Deployment
 
-Docs:
+Releases are published to Maven Central by the [`release.yml`](.github/workflows/release.yml)
+workflow, triggered by a `v*` tag.
 
-- https://central.sonatype.org/publish/publish-portal-maven/
-- https://central.sonatype.org/publish/requirements/gpg/
-- https://central.sonatype.org/publish/generate-portal-token/
-
-Generate a Portal token at https://central.sonatype.com, then set `~/.m2/settings.xml`:
-
-```xml
-<settings>
-    <servers>
-        <server>
-            <id>central</id>
-            <username><!-- your token username --></username>
-            <password><!-- your token password --></password>
-        </server>
-        <server>
-            <id>D7771F55ED62AAC7162CFDE833B20E4440CDF36D</id>
-            <passphrase><!-- your GPG key passphrase --></passphrase>
-        </server>
-    </servers>
-</settings>
-```
-
-Then run:
+One-time setup: generate a Portal token at https://central.sonatype.com, then store the
+credentials as repo secrets:
 
 ```bash
-mvn versions:set -DnewVersion=1.0.1 # bump version
-mvn clean deploy
+gh secret set GPG_PRIVATE_KEY --repo hsluv/hsluv-java < signing-key.asc
+gh secret set GPG_PASSPHRASE --repo hsluv/hsluv-java --body "<passphrase>"
+gh secret set CENTRAL_TOKEN_USERNAME --repo hsluv/hsluv-java --body "<token username>"
+gh secret set CENTRAL_TOKEN_PASSWORD --repo hsluv/hsluv-java --body "<token password>"
+```
+
+Then bump the version in `pom.xml` and create a release:
+
+```bash
+gh release create v1.0.1 --generate-notes
 ```
