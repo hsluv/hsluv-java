@@ -11,7 +11,7 @@ If you are using Maven, add the following to your `pom.xml` file:
     <dependency>
         <groupId>org.hsluv</groupId>
         <artifactId>hsluv</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </dependency>
 
 # Usage
@@ -98,6 +98,6 @@ Generate a Portal token at https://central.sonatype.com, then set `~/.m2/setting
 Then run:
 
 ```bash
-mvn versions:set -DnewVersion=0.3 # bump version
+mvn versions:set -DnewVersion=1.0.1 # bump version
 mvn clean deploy
 ```
