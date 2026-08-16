@@ -1,6 +1,6 @@
-[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
-[![Package Version](https://img.shields.io/maven-central/v/org.hsluv/hsluv.svg)](http://repo1.maven.org/maven2/org/hsluv/hsluv/)
-[![Javadocs](http://www.javadoc.io/badge/org.hsluv/hsluv.svg)](http://www.javadoc.io/doc/org.hsluv/hsluv)
+[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.hsluv/hsluv)](https://central.sonatype.com/artifact/org.hsluv/hsluv)
+[![Javadoc](https://javadoc.io/badge2/org.hsluv/hsluv/javadoc.svg)](https://javadoc.io/doc/org.hsluv/hsluv)
 
 About: http://www.hsluv.org
 
