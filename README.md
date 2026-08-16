@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
+[![Build Status](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/hsluv/hsluv-java/actions/workflows/test.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/org.hsluv/hsluv)](https://central.sonatype.com/artifact/org.hsluv/hsluv)
 [![Javadoc](https://javadoc.io/badge2/org.hsluv/hsluv/javadoc.svg)](https://javadoc.io/doc/org.hsluv/hsluv)
 
