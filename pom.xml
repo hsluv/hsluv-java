@@ -108,8 +108,8 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
-                            <keyname>EBFD22439E5C59D664D0CFC750617B51F61187C2</keyname>
-                            <passphraseServerId>EBFD22439E5C59D664D0CFC750617B51F61187C2</passphraseServerId>
+                            <keyname>D7771F55ED62AAC7162CFDE833B20E4440CDF36D</keyname>
+                            <passphraseServerId>D7771F55ED62AAC7162CFDE833B20E4440CDF36D</passphraseServerId>
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>

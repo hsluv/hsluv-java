@@ -88,7 +88,7 @@ Generate a Portal token at https://central.sonatype.com, then set `~/.m2/setting
             <password><!-- your token password --></password>
         </server>
         <server>
-            <id>EBFD22439E5C59D664D0CFC750617B51F61187C2</id>
+            <id>D7771F55ED62AAC7162CFDE833B20E4440CDF36D</id>
             <passphrase><!-- your GPG key passphrase --></passphrase>
         </server>
     </servers>

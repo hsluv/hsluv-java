@@ -40,7 +40,7 @@ jobs:
                 <password>${CENTRAL_TOKEN_PASSWORD}</password>
               </server>
               <server>
-                <id>EBFD22439E5C59D664D0CFC750617B51F61187C2</id>
+                <id>D7771F55ED62AAC7162CFDE833B20E4440CDF36D</id>
                 <passphrase>${GPG_PASSPHRASE}</passphrase>
               </server>
             </servers>
