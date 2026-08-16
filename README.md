@@ -11,7 +11,7 @@ If you are using Maven, add the following to your `pom.xml` file:
     <dependency>
         <groupId>org.hsluv</groupId>
         <artifactId>hsluv</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 
 # Usage
@@ -87,5 +87,5 @@ gh secret set CENTRAL_TOKEN_PASSWORD --repo hsluv/hsluv-java --body "<token pass
 Then bump the version in `pom.xml` and create a release:
 
 ```bash
-gh release create v1.0.1 --generate-notes
+gh release create v1.0.2 --generate-notes
 ```
