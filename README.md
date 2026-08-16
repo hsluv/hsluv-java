@@ -11,7 +11,7 @@ If you are using Maven, add the following to your `pom.xml` file:
     <dependency>
         <groupId>org.hsluv</groupId>
         <artifactId>hsluv</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </dependency>
 
 # Usage
@@ -73,37 +73,31 @@ var color = android.graphics.Color.rgb(r, g, b);
 
 Docs:
 
-- https://central.sonatype.org/publish/publish-maven/
+- https://central.sonatype.org/publish/publish-portal-maven/
 - https://central.sonatype.org/publish/requirements/gpg/
+- https://central.sonatype.org/publish/generate-portal-token/
 
-Set `~/m2/settings.xml`:
+Generate a Portal token at https://central.sonatype.com, then set `~/.m2/settings.xml`:
 
 ```xml
 <settings>
     <servers>
         <server>
-            <id>ossrh</id>
-            <username>hsluv</username>
-            <password>REDACTEDREDACTEDREDACTED</password>
+            <id>central</id>
+            <username><!-- your token username --></username>
+            <password><!-- your token password --></password>
+        </server>
+        <server>
+            <id>D7771F55ED62AAC7162CFDE833B20E4440CDF36D</id>
+            <passphrase><!-- your GPG key passphrase --></passphrase>
         </server>
     </servers>
-    <profiles>
-        <profile>
-            <id>ossrh</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <gpg.passphrase>REDACTEDREDACTEDREDACTED</gpg.passphrase>
-            </properties>
-        </profile>
-    </profiles>
 </settings>
 ```
 
 Then run:
 
 ```bash
-mvn versions:set -DnewVersion=0.3 # bump version
-mvn clean deploy -P release
+mvn versions:set -DnewVersion=1.0.1 # bump version
+mvn clean deploy
 ```
