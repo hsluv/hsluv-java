@@ -18,7 +18,7 @@ If you are using Maven, add the following to your `pom.xml` file:
 
 The API is designed to avoid heap allocation. The `HSLuv` class defines the following public fields:
 
-- RGB: `hex:String`, `rgb_r` [0;1], `rgb_g` [0;1], `rgb_r` [0;1]
+- RGB: `hex:String`, `rgb_r` [0;1], `rgb_g` [0;1], `rgb_b` [0;1]
 - CIE XYZ: `xyz_x`, `xyz_y`, `xyz_z`
 - CIE LUV: `luv_l`, `luv_u`, `luv_v`
 - CIE LUV LCh: `lch_l`, `lch_c`, `lch_h`
